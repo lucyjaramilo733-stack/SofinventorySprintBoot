@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
 <head th:replace="~{fragments/layout :: head('Nuevo Proveedor')}"></head>
 <body>
 
 <div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
     <th:block th:replace="~{fragments/layout :: sidebar('proveedores')}"/>
 
     <!-- Contenido principal -->

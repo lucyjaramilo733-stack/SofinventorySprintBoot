@@ -3,30 +3,40 @@
 <head th:replace="~{fragments/layout :: head('Nuevo Usuario')}"></head>
 <body>
 <div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
     <th:block th:replace="~{fragments/layout :: sidebar('usuarios')}"/>
     <main class="main">
+        <!-- Encabezado de la página con título, descripción y botón de volver -->
         <th:block th:replace="~{fragments/layout :: headerPagina('Nuevo Usuario', 'Completa los datos del nuevo usuario', '/usuarios', '← Volver')}"/>
 
         <div class="form-container">
+            <!-- Mensaje de error si existe -->
             <div th:if="${error}" class="error"><p th:text="${error}"></p></div>
+
+            <!-- Formulario para crear un nuevo usuario -->
             <form action="/usuarios/guardar" method="post" id="formUsuario">
                 <div class="form-grid">
+                    <!-- Campo: Nombre completo -->
                     <div class="input-group">
                         <label>Nombre completo</label>
                         <input type="text" name="nombreCompleto" placeholder="Nombre completo" required/>
                     </div>
+                    <!-- Campo: Username -->
                     <div class="input-group">
                         <label>Username</label>
                         <input type="text" name="username" placeholder="Nombre de usuario" required/>
                     </div>
+                    <!-- Campo: Email -->
                     <div class="input-group">
                         <label>Email</label>
                         <input type="email" name="email" placeholder="correo@ejemplo.com" required/>
                     </div>
+                    <!-- Campo: Contraseña -->
                     <div class="input-group">
                         <label>Contraseña</label>
                         <input type="password" name="password" placeholder="Contraseña" required/>
                     </div>
+                    <!-- Campo: Tipo de documento (select con opciones) -->
                     <div class="input-group">
                         <label>Tipo de documento</label>
                         <select name="tipoDocumentoId" required>
@@ -36,10 +46,12 @@
                                     th:text="${tipo.codigo + ' - ' + tipo.nombre}"></option>
                         </select>
                     </div>
+                    <!-- Campo: Número de documento -->
                     <div class="input-group">
                         <label>Número de documento</label>
                         <input type="text" name="numeroDocumento" placeholder="Número de documento" required/>
                     </div>
+                    <!-- Campo: Rol (select con opciones) -->
                     <div class="input-group">
                         <label>Rol</label>
                         <select name="rolId" required>
@@ -50,6 +62,7 @@
                         </select>
                     </div>
                 </div>
+                <!-- Botones de acción -->
                 <div class="form-actions">
                     <a href="/usuarios" class="btn-cancelar">Cancelar</a>
                     <button type="submit" class="btn-guardar">Guardar Usuario</button>
@@ -58,6 +71,7 @@
         </div>
     </main>
 </div>
+<!-- Scripts de funcionalidades -->
 <script th:src="@{/js/dashboard.js}"></script>
 <script th:src="@{/js/usuarios.js}"></script>
 </body>

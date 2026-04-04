@@ -7,7 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+/**
+ * Controlador Web para la gestión administrativa de Proveedores.
+ * Maneja el ciclo de vida de los proveedores (CRUD) y la lógica de visualización
+ * para las vistas de Thymeleaf.
+ */
 @Controller
 @RequestMapping("/proveedores")
 @RequiredArgsConstructor
@@ -15,28 +19,37 @@ public class ProveedorWebController {
 
     private final ProveedorService proveedorService;
 
-    // Lista proveedores
+    /**
+     * Lista los proveedores categorizados por su estado operativo.
+     * Implementa un control de sesión básico para asegurar que solo usuarios
+     * autenticados accedan al panel de gestión.
+     */
     @GetMapping
     public String listar(HttpSession session, Model model) {
         if (session.getAttribute("token") == null) {
             return "redirect:/login";
         }
+        // Se separan activos de inactivos para facilitar la toma de decisiones en compras
         model.addAttribute("activos", proveedorService.listarActivos());
         model.addAttribute("inactivos", proveedorService.listarInactivos());
         return "proveedores/lista";
     }
 
-    // Formulario nuevo proveedor
     @GetMapping("/nuevo")
     public String formNuevo(HttpSession session, Model model) {
         if (session.getAttribute("token") == null) {
             return "redirect:/login";
         }
+        // Cargamos los tipos de documento dinámicamente desde la base de datos
         model.addAttribute("tiposDocumento", proveedorService.listarTiposDocumento());
         return "proveedores/form";
     }
 
-    // Guardar nuevo proveedor
+    /**
+     * Procesa el registro de un nuevo proveedor.
+     * Se utiliza captura de excepciones para manejar errores de integridad de datos
+     * (ej. documentos duplicados) y retornar feedback visual al usuario.
+     */
     @PostMapping("/guardar")
     public String guardar(@RequestParam String numeroDocumento,
                           @RequestParam String razonSocial,
@@ -58,6 +71,7 @@ public class ProveedorWebController {
             return "redirect:/login";
         }
         try {
+            // Mapeo manual de parámetros a la entidad para mantener control sobre el objeto persistido
             Proveedor proveedor = new Proveedor();
             proveedor.setNumeroDocumento(numeroDocumento);
             proveedor.setRazonSocial(razonSocial);
@@ -76,14 +90,12 @@ public class ProveedorWebController {
             proveedorService.crearProveedor(proveedor, tipoDocumentoId);
             return "redirect:/proveedores";
         } catch (Exception e) {
+            // En caso de error, devolvemos los datos al formulario para no perder la entrada del usuario
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("tiposDocumento",
-                    proveedorService.listarTiposDocumento());
+            model.addAttribute("tiposDocumento", proveedorService.listarTiposDocumento());
             return "proveedores/form";
         }
     }
-
-    // Formulario editar proveedor
     @GetMapping("/editar/{id}")
     public String formEditar(@PathVariable Long id,
                              HttpSession session, Model model) {
@@ -94,8 +106,10 @@ public class ProveedorWebController {
         model.addAttribute("tiposDocumento", proveedorService.listarTiposDocumento());
         return "proveedores/editar";
     }
-
-    // Actualizar proveedor
+    /**
+     * Actualiza la información de un proveedor existente.
+     * Mantiene la integridad de la relación con el Tipo de Documento mediante su ID.
+     */
     @PostMapping("/actualizar/{id}")
     public String actualizar(@PathVariable Long id,
                              @RequestParam String razonSocial,
@@ -136,13 +150,13 @@ public class ProveedorWebController {
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("proveedor", proveedorService.obtenerProveedor(id));
-            model.addAttribute("tiposDocumento",
-                    proveedorService.listarTiposDocumento());
+            model.addAttribute("tiposDocumento", proveedorService.listarTiposDocumento());
             return "proveedores/editar";
         }
     }
-
-    // Desactivar proveedor
+    /**
+     * Aplica un borrado lógico al proveedor para preservar el histórico de compras relacionadas.
+     */
     @GetMapping("/desactivar/{id}")
     public String desactivar(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("token") == null) {
@@ -152,7 +166,6 @@ public class ProveedorWebController {
         return "redirect:/proveedores";
     }
 
-    // Reactivar proveedor
     @GetMapping("/reactivar/{id}")
     public String reactivar(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("token") == null) {
@@ -161,8 +174,10 @@ public class ProveedorWebController {
         proveedorService.reactivarProveedor(id);
         return "redirect:/proveedores";
     }
-
-    // Eliminar permanentemente
+    /**
+     * Borrado físico del registro.
+     * Solo recomendado si el proveedor no tiene transacciones asociadas en el sistema.
+     */
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("token") == null) {

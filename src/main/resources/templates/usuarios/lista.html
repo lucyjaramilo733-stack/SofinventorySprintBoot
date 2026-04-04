@@ -3,20 +3,25 @@
 <head th:replace="~{fragments/layout :: head('Usuarios')}"></head>
 <body>
 <div class="layout">
+    <!-- Sidebar de navegación, se carga desde fragmento -->
     <th:block th:replace="~{fragments/layout :: sidebar('usuarios')}"/>
     <main class="main">
+        <!-- Encabezado de la página con título, descripción y botón de nuevo usuario -->
         <th:block th:replace="~{fragments/layout :: headerPagina('Gestión de Usuarios', 'Administra los usuarios del sistema', '/usuarios/nuevo', '+ Nuevo Usuario')}"/>
 
+        <!-- Sección de usuarios activos -->
         <h3 class="section-title">Usuarios Activos</h3>
         <div class="table-container">
             <table class="tabla">
                 <thead>
                 <tr>
+                    <!-- Encabezados de la tabla -->
                     <th>#</th><th>Nombre completo</th><th>Username</th>
                     <th>Email</th><th>Documento</th><th>Rol</th><th>Estado</th><th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Iteración sobre la lista de usuarios activos -->
                 <tr th:each="usuario : ${usuarios}">
                     <td th:text="${usuario.id}"></td>
                     <td th:text="${usuario.nombreCompleto}"></td>
@@ -26,6 +31,7 @@
                     <td><span class="badge-rol" th:text="${usuario.rol.nombre}"></span></td>
                     <td><span class="badge-activo">Activo</span></td>
                     <td class="acciones">
+                        <!-- Acciones disponibles para usuarios activos -->
                         <a th:href="@{/usuarios/editar/{id}(id=${usuario.id})}" class="btn-editar">Editar</a>
                         <a th:href="@{/usuarios/desactivar/{id}(id=${usuario.id})}" class="btn-desactivar"
                            onclick="return confirm('¿Desactivar este usuario?')">Desactivar</a>
@@ -37,16 +43,19 @@
             </table>
         </div>
 
+        <!-- Sección de usuarios inactivos -->
         <h3 class="section-title" style="margin-top: 32px;">Usuarios Inactivos</h3>
         <div class="table-container">
             <table class="tabla">
                 <thead>
                 <tr>
+                    <!-- Encabezados de la tabla -->
                     <th>#</th><th>Nombre completo</th><th>Username</th>
                     <th>Email</th><th>Documento</th><th>Rol</th><th>Estado</th><th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Iteración sobre la lista de usuarios inactivos -->
                 <tr th:each="usuario : ${inactivos}">
                     <td th:text="${usuario.id}"></td>
                     <td th:text="${usuario.nombreCompleto}"></td>
@@ -56,6 +65,7 @@
                     <td><span class="badge-rol" th:text="${usuario.rol.nombre}"></span></td>
                     <td><span class="badge-inactivo">Inactivo</span></td>
                     <td class="acciones">
+                        <!-- Acciones disponibles para usuarios inactivos -->
                         <a th:href="@{/usuarios/reactivar/{id}(id=${usuario.id})}" class="btn-reactivar"
                            onclick="return confirm('¿Reactivar este usuario?')">Reactivar</a>
                         <a th:href="@{/usuarios/eliminar/{id}(id=${usuario.id})}" class="btn-eliminar"
@@ -67,6 +77,7 @@
         </div>
     </main>
 </div>
+<!-- Script de funcionalidades del dashboard -->
 <script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>

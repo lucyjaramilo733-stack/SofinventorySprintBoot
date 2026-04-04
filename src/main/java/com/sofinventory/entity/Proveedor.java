@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
-
+/**
+ * Entidad que representa a los proveedores de la ferretería.
+ * Almacena información fiscal, de contacto y de ubicación necesaria para
+ * la gestión de compras y cumplimiento de requisitos legales (DIAN).
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,12 +21,15 @@ public class Proveedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Identificación única (NIT, CC, RUT) para validaciones fiscales
     @Column(name = "numero_documento", nullable = false, length = 20)
     private String numeroDocumento;
 
+    // Nombre legal registrado en cámara de comercio
     @Column(name = "razon_social", nullable = false, length = 160)
     private String razonSocial;
 
+    // Nombre de marca o "aviso" (opcional, para uso comercial)
     @Column(name = "nombre_comercial", length = 120)
     private String nombreComercial;
 
@@ -50,14 +57,25 @@ public class Proveedor {
     @Column(name = "ciudad", length = 80)
     private String ciudad;
 
-    @Column(name = "tipo_proveedor", nullable = false, length = 20)
+    /**
+     * Define si el proveedor es 'nacional' o 'extranjero'.
+     * Útil para cálculos de impuestos y logística de importación.
+     */
+    @Column(name = "tipo_provider", nullable = false, length = 20)
     private String tipoProveedor = "nacional";
 
+    /**
+     * Estado operativo: 'activo', 'inactivo'.
+     * Controla si el proveedor puede ser seleccionado en nuevas órdenes de compra.
+     */
     @Column(name = "estado", nullable = false, length = 10)
     private String estado = "activo";
 
     @Column(name = "observaciones", columnDefinition = "TEXT")
     private String observaciones;
+
+    // --- SECCIÓN DE AUDITORÍA Y TRAZABILIDAD ---
+    // Permite saber quién y cuándo se realizaron cambios en la base de datos de proveedores.
 
     @Column(name = "fecha_registro", nullable = false)
     private ZonedDateTime fechaRegistro = ZonedDateTime.now();
@@ -65,10 +83,15 @@ public class Proveedor {
     @Column(name = "fecha_actualizacion", nullable = false)
     private ZonedDateTime fechaActualizacion = ZonedDateTime.now();
 
+    /**
+     * Campo para 'Soft Delete' (Borrado Lógico).
+     * Si no es nulo, el proveedor se considera eliminado sin perder sus datos históricos.
+     */
     @Column(name = "fecha_eliminacion")
     private ZonedDateTime fechaEliminacion;
 
-    // Relaciones
+    // --- RELACIONES ---
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_documento_id", nullable = false)
     private TipoDocumento tipoDocumento;

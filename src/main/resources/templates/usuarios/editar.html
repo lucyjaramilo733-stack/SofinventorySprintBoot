@@ -3,26 +3,35 @@
 <head th:replace="~{fragments/layout :: head('Editar Usuario')}"></head>
 <body>
 <div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
     <th:block th:replace="~{fragments/layout :: sidebar('usuarios')}"/>
     <main class="main">
+        <!-- Encabezado de la página con título, descripción y botón de volver -->
         <th:block th:replace="~{fragments/layout :: headerPagina('Editar Usuario', 'Modifica los datos del usuario', '/usuarios', '← Volver')}"/>
 
         <div class="form-container">
+            <!-- Mensaje de error si existe -->
             <div th:if="${error}" class="error"><p th:text="${error}"></p></div>
+
+            <!-- Formulario para actualizar datos del usuario -->
             <form th:action="@{/usuarios/actualizar/{id}(id=${usuario.id})}" method="post">
                 <div class="form-grid">
+                    <!-- Campo: Nombre completo -->
                     <div class="input-group">
                         <label>Nombre completo</label>
                         <input type="text" name="nombreCompleto" th:value="${usuario.nombreCompleto}" required/>
                     </div>
+                    <!-- Campo: Username -->
                     <div class="input-group">
                         <label>Username</label>
                         <input type="text" name="username" th:value="${usuario.username}" required/>
                     </div>
+                    <!-- Campo: Email -->
                     <div class="input-group">
                         <label>Email</label>
                         <input type="email" name="email" th:value="${usuario.email}" required/>
                     </div>
+                    <!-- Campo: Tipo de documento (select con opciones) -->
                     <div class="input-group">
                         <label>Tipo de documento</label>
                         <select name="tipoDocumentoId" required>
@@ -32,10 +41,12 @@
                                     th:selected="${tipo.id == usuario.tipoDocumento.id}"></option>
                         </select>
                     </div>
+                    <!-- Campo: Número de documento (solo lectura) -->
                     <div class="input-group">
                         <label>Número de documento</label>
                         <input type="text" th:value="${usuario.numeroDocumento}" disabled/>
                     </div>
+                    <!-- Campo: Rol (select con opciones) -->
                     <div class="input-group">
                         <label>Rol</label>
                         <select name="rolId" required>
@@ -46,6 +57,7 @@
                         </select>
                     </div>
                 </div>
+                <!-- Botones de acción -->
                 <div class="form-actions">
                     <a href="/usuarios" class="btn-cancelar">Cancelar</a>
                     <button type="submit" class="btn-guardar">Actualizar Usuario</button>
@@ -54,6 +66,7 @@
         </div>
     </main>
 </div>
+<!-- Script de funcionalidades del dashboard -->
 <script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>
