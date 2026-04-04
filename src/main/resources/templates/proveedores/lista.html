@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Proveedores')}"></head>
+<body>
+
+<div class="layout">
+    <th:block th:replace="~{fragments/layout :: sidebar('proveedores')}"/>
+
+
+    <!-- Contenido principal -->
+    <main class="main">
+
+        <th:block th:replace="~{fragments/layout :: headerPagina('Gestión de Proveedores', 'Administra los proveedores del negocio', '/proveedores/nuevo', '+ Nuevo Proveedor')}"/>
+
+
+        <!-- Proveedores activos -->
+        <h3 class="section-title">Proveedores Activos</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Razón social</th>
+                    <th>Nombre comercial</th>
+                    <th>Documento</th>
+                    <th>Contacto</th>
+                    <th>Teléfono</th>
+                    <th>Ciudad</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="proveedor : ${activos}">
+
+                    <td data-label="#" th:text="${proveedor.id}"></td>
+
+                    <td data-label="Razón social" th:text="${proveedor.razonSocial}"></td>
+
+                    <td data-label="Nombre comercial" th:text="${proveedor.nombreComercial}"></td>
+
+                    <td data-label="Documento"
+                        th:text="${proveedor.tipoDocumento.codigo + ' ' + proveedor.numeroDocumento}">
+                    </td>
+
+                    <td data-label="Contacto" th:text="${proveedor.nombreContacto}"></td>
+
+                    <td data-label="Teléfono" th:text="${proveedor.telefono}"></td>
+
+                    <td data-label="Ciudad" th:text="${proveedor.ciudad}"></td>
+
+                    <td data-label="Tipo">
+            <span class="badge-tipo"
+                  th:classappend="${proveedor.tipoProveedor == 'internacional'} ? ' badge-tipo-internacional' : ''"
+                  th:text="${proveedor.tipoProveedor}">
+            </span>
+                    </td>
+
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/proveedores/editar/{id}(id=${proveedor.id})}"
+                           class="btn-editar">Editar</a>
+
+                        <a th:href="@{/proveedores/desactivar/{id}(id=${proveedor.id})}"
+                           class="btn-desactivar"
+                           onclick="return confirm('¿Desactivar este proveedor?')">
+                            Desactivar
+                        </a>
+
+                        <a th:href="@{/proveedores/eliminar/{id}(id=${proveedor.id})}"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Eliminar permanentemente?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Proveedores inactivos -->
+        <h3 class="section-title" style="margin-top: 32px;">Proveedores Inactivos</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Razón social</th>
+                    <th>Nombre comercial</th>
+                    <th>Documento</th>
+                    <th>Contacto</th>
+                    <th>Teléfono</th>
+                    <th>Ciudad</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="proveedor : ${inactivos}">
+                    <td th:text="${proveedor.id}"></td>
+                    <td th:text="${proveedor.razonSocial}"></td>
+                    <td th:text="${proveedor.nombreComercial}"></td>
+                    <td th:text="${proveedor.tipoDocumento.codigo + ' ' + proveedor.numeroDocumento}"></td>
+                    <td th:text="${proveedor.nombreContacto}"></td>
+                    <td th:text="${proveedor.telefono}"></td>
+                    <td th:text="${proveedor.ciudad}"></td>
+                    <td>
+                        <span class="badge-tipo" th:text="${proveedor.tipoProveedor}"></span>
+                    </td>
+                    <td class="acciones">
+                        <a th:href="@{/proveedores/reactivar/{id}(id=${proveedor.id})}"
+                           class="btn-reactivar"
+                           onclick="return confirm('¿Reactivar este proveedor?')">
+                            Reactivar
+                        </a>
+                        <a th:href="@{/proveedores/eliminar/{id}(id=${proveedor.id})}"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Eliminar permanentemente?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

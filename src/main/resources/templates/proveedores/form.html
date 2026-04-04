@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nuevo Proveedor')}"></head>
+<body>
+
+<div class="layout">
+    <th:block th:replace="~{fragments/layout :: sidebar('proveedores')}"/>
+
+    <!-- Contenido principal -->
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Nuevo Proveedor', 'Completa los datos del nuevo proveedor', '/proveedores', '← Volver')}"/>
+
+
+        <div class="form-container">
+
+            <div th:if="${error}" class="error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form action="/proveedores/guardar" method="post">
+
+                <!-- Sección: Identificación -->
+                <div class="form-grid">
+                    <p class="form-section-title">Identificación</p>
+
+                    <div class="input-group">
+                        <label>Tipo de documento *</label>
+                        <select name="tipoDocumentoId" required>
+                            <option value="">Selecciona...</option>
+                            <option th:each="tipo : ${tiposDocumento}"
+                                    th:value="${tipo.id}"
+                                    th:text="${tipo.codigo + ' - ' + tipo.nombre}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Número de documento *</label>
+                        <input type="text" name="numeroDocumento"
+                               placeholder="Ej: 900123456-7" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Razón social *</label>
+                        <input type="text" name="razonSocial"
+                               placeholder="Ej: Distribuciones Ejemplo S.A.S" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nombre comercial</label>
+                        <input type="text" name="nombreComercial"
+                               placeholder="Ej: Distri Ejemplo"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Tipo de proveedor *</label>
+                        <select name="tipoProveedor" required>
+                            <option value="nacional">Nacional</option>
+                            <option value="internacional">Internacional</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sección: Contacto -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Contacto</p>
+
+                    <div class="input-group">
+                        <label>Nombre del contacto</label>
+                        <input type="text" name="nombreContacto"
+                               placeholder="Ej: María García"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Cargo del contacto</label>
+                        <input type="text" name="cargoContacto"
+                               placeholder="Ej: Ejecutiva de ventas"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email"
+                               placeholder="Ej: ventas@ejemplo.com"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono"
+                               placeholder="Ej: 3001234567"/>
+                    </div>
+                </div>
+
+                <!-- Sección: Ubicación -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Ubicación</p>
+
+                    <div class="input-group">
+                        <label>País *</label>
+                        <input type="text" name="pais" value="Colombia" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Departamento</label>
+                        <input type="text" name="departamento"
+                               placeholder="Ej: Nariño"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Ciudad</label>
+                        <input type="text" name="ciudad"
+                               placeholder="Ej: Pasto"/>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Dirección</label>
+                        <textarea name="direccion"
+                                  placeholder="Ej: Cra 25 # 18-40, Zona Industrial"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección: Observaciones -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Observaciones</p>
+                    <div class="input-group full-width">
+                        <label>Observaciones</label>
+                        <textarea name="observaciones"
+                                  placeholder="Notas adicionales sobre el proveedor..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/proveedores" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar Proveedor</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Editar Proveedor')}"></head>
+<body>
+
+<div class="layout">
+
+    <th:block th:replace="~{fragments/layout :: sidebar('proveedores')}"/>
+
+    <!-- Contenido principal -->
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Editar Proveedor', 'Modifica los datos del proveedor', '/proveedores', '← Volver')}"/>
+
+        <div class="form-container">
+
+            <div th:if="${error}" class="error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/proveedores/actualizar/{id}(id=${proveedor.id})}"
+                  method="post">
+
+                <!-- Sección: Identificación -->
+                <div class="form-grid">
+                    <p class="form-section-title">Identificación</p>
+
+                    <div class="input-group">
+                        <label>Tipo de documento *</label>
+                        <select name="tipoDocumentoId" required>
+                            <option th:each="tipo : ${tiposDocumento}"
+                                    th:value="${tipo.id}"
+                                    th:text="${tipo.codigo + ' - ' + tipo.nombre}"
+                                    th:selected="${tipo.id == proveedor.tipoDocumento.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Número de documento</label>
+                        <input type="text" th:value="${proveedor.numeroDocumento}" disabled/>
+                        <span style="font-size:12px; color:#999;">
+                            El número de documento no se puede modificar
+                        </span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Razón social *</label>
+                        <input type="text" name="razonSocial"
+                               th:value="${proveedor.razonSocial}" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nombre comercial</label>
+                        <input type="text" name="nombreComercial"
+                               th:value="${proveedor.nombreComercial}"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Tipo de proveedor *</label>
+                        <select name="tipoProveedor" required>
+                            <option value="nacional"
+                                    th:selected="${proveedor.tipoProveedor == 'nacional'}">
+                                Nacional
+                            </option>
+                            <option value="internacional"
+                                    th:selected="${proveedor.tipoProveedor == 'internacional'}">
+                                Internacional
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sección: Contacto -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Contacto</p>
+
+                    <div class="input-group">
+                        <label>Nombre del contacto</label>
+                        <input type="text" name="nombreContacto"
+                               th:value="${proveedor.nombreContacto}"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Cargo del contacto</label>
+                        <input type="text" name="cargoContacto"
+                               th:value="${proveedor.cargoContacto}"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email"
+                               th:value="${proveedor.email}"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefono"
+                               th:value="${proveedor.telefono}"/>
+                    </div>
+                </div>
+
+                <!-- Sección: Ubicación -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Ubicación</p>
+
+                    <div class="input-group">
+                        <label>País *</label>
+                        <input type="text" name="pais"
+                               th:value="${proveedor.pais}" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Departamento</label>
+                        <input type="text" name="departamento"
+                               th:value="${proveedor.departamento}"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Ciudad</label>
+                        <input type="text" name="ciudad"
+                               th:value="${proveedor.ciudad}"/>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Dirección</label>
+                        <textarea name="direccion"
+                                  th:text="${proveedor.direccion}"></textarea>
+                    </div>
+                </div>
+
+                <!-- Sección: Observaciones -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Observaciones</p>
+                    <div class="input-group full-width">
+                        <label>Observaciones</label>
+                        <textarea name="observaciones"
+                                  th:text="${proveedor.observaciones}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/proveedores" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Actualizar Proveedor</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
