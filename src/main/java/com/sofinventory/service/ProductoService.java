@@ -36,6 +36,11 @@ public class ProductoService {
         return productoRepository.findByFechaEliminacionIsNotNull();
     }
     // Obtener producto por id
+
+    // ── Contadores para el dashboard ─────────────────────────────────────────
+    public long contarActivos() {
+        return productoRepository.countByFechaEliminacionIsNull();
+    }
     public Producto obtenerProducto(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));

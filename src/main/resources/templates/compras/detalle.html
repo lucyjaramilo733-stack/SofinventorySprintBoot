@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Detalle Compra')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('compras')}"/>
+
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Detalle de Compra',
+            'Información completa de la compra',
+            '/compras',
+            '← Volver')}"/>
+
+        <div class="form-container">
+
+            <!-- Datos cabecera -->
+            <div class="form-grid">
+                <p class="form-section-title">Datos generales</p>
+
+                <div class="input-group">
+                    <label>Número de factura</label>
+                    <input type="text" th:value="${compra.numeroFactura}" disabled/>
+                </div>
+
+                <div class="input-group">
+                    <label>Fecha de compra</label>
+                    <input type="text" th:value="${compra.fechaCompra}" disabled/>
+                </div>
+
+                <div class="input-group">
+                    <label>Proveedor</label>
+                    <input type="text" th:value="${compra.proveedor.razonSocial}" disabled/>
+                </div>
+
+                <div class="input-group">
+                    <label>Tipo de compra</label>
+                    <input type="text" th:value="${compra.tipoCompra}" disabled/>
+                </div>
+
+                <div class="input-group">
+                    <label>Estado</label>
+                    <input type="text" th:value="${compra.estado}" disabled/>
+                </div>
+
+                <div class="input-group">
+                    <label>Registrado por</label>
+                    <input type="text"
+                           th:value="${compra.registradoPor.nombreCompleto}" disabled/>
+                </div>
+            </div>
+
+            <!-- Tabla de productos -->
+            <div class="form-grid" style="margin-top: 8px;">
+                <p class="form-section-title">Productos comprados</p>
+            </div>
+
+            <div class="table-container">
+                <table class="tabla-detalle">
+                    <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Almacén</th>
+                        <th>Cantidad</th>
+                        <th>Costo unitario</th>
+                        <th>IVA %</th>
+                        <th>Subtotal</th>
+                        <th>Total</th>
+                        <th>Lote</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="d : ${detalles}">
+                        <td th:text="${d.producto.sku + ' - ' + d.producto.nombre}"></td>
+                        <td th:text="${d.almacen.nombre}"></td>
+                        <td th:text="${d.cantidad}"></td>
+                        <td th:text="${'$ ' + #numbers.formatDecimal(d.costoUnitario, 1, 'COMMA', 0, 'POINT')}"></td>
+                        <td th:text="${d.ivaPorcentaje + '%'}"></td>
+                        <td th:text="${'$ ' + #numbers.formatDecimal(d.subtotal, 1, 'COMMA', 0, 'POINT')}"></td>
+                        <td><strong th:text="${'$ ' + #numbers.formatDecimal(d.total, 1, 'COMMA', 0, 'POINT')}"></strong></td>
+                        <td th:text="${d.codigoLote != null ? d.codigoLote : '-'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Totales -->
+            <div class="totales-compra">
+                <div class="fila-total">
+                    <span>Subtotal:</span>
+                    <span th:text="${'$ ' + #numbers.formatDecimal(compra.subtotal, 1, 'COMMA', 0, 'POINT')}"></span>
+                </div>
+                <div class="fila-total">
+                    <span>IVA:</span>
+                    <span th:text="${'$ ' + #numbers.formatDecimal(compra.ivaTotal, 1, 'COMMA', 0, 'POINT')}"></span>
+                </div>
+                <div class="fila-total total-final">
+                    <span>Total:</span>
+                    <span th:text="${'$ ' + #numbers.formatDecimal(compra.total, 1, 'COMMA', 0, 'POINT')}"></span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

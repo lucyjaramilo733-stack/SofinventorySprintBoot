@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Compras')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('compras')}"/>
+
+    <main class="main">
+
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Gestión de Compras',
+            'Registro de compras a proveedores',
+            '/compras/nueva',
+            '+ Nueva Compra')}"/>
+
+        <!-- Mensaje de error si viene de anular -->
+        <div th:if="${error}" class="error" style="margin: 0 0 16px 0;">
+            <p th:text="${error}"></p>
+        </div>
+
+        <h3 class="section-title">Compras registradas</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Factura</th>
+                    <th>Fecha</th>
+                    <th>Proveedor</th>
+                    <th>Tipo</th>
+                    <th>Subtotal</th>
+                    <th>IVA</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Registrado por</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${compras}">
+                    <td data-label="#" th:text="${c.id}"></td>
+                    <td data-label="Factura" th:text="${c.numeroFactura}"></td>
+                    <td data-label="Fecha" th:text="${c.fechaCompra}"></td>
+                    <td data-label="Proveedor" th:text="${c.proveedor.razonSocial}"></td>
+                    <td data-label="Tipo">
+                            <span class="badge-tipo-compra"
+                                  th:classappend="${c.tipoCompra}"
+                                  th:text="${c.tipoCompra}">
+                            </span>
+                    </td>
+                    <td data-label="Subtotal"
+                        th:text="${'$ ' + #numbers.formatDecimal(c.subtotal, 1, 'COMMA', 0, 'POINT')}">
+                    </td>
+                    <td data-label="IVA"
+                        th:text="${'$ ' + #numbers.formatDecimal(c.ivaTotal, 1, 'COMMA', 0, 'POINT')}">
+                    </td>
+                    <td data-label="Total">
+                        <strong th:text="${'$ ' + #numbers.formatDecimal(c.total, 1, 'COMMA', 0, 'POINT')}"></strong>
+                    </td>
+                    <td data-label="Estado">
+                            <span class="badge-estado-compra"
+                                  th:classappend="${c.estado}"
+                                  th:text="${c.estado}">
+                            </span>
+                    </td>
+                    <td data-label="Registrado por"
+                        th:text="${c.registradoPor.nombreCompleto}">
+                    </td>
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/compras/detalle/{id}(id=${c.id})}"
+                           class="btn-detalle">Ver detalle</a>
+                        <a th:if="${c.estado != 'anulada'}"
+                           th:href="@{/compras/anular/{id}(id=${c.id})}"
+                           class="btn-anular"
+                           onclick="return confirm('¿Anular esta compra? Se revertirá el stock.')">
+                            Anular
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
