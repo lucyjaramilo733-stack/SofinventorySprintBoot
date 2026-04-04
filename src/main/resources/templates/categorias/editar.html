@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Editar Categoría')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación -->
+    <th:block th:replace="~{fragments/layout :: sidebar('categorias')}"/>
+
+    <!-- Contenido principal -->
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Editar Categoría', 'Modifica los datos de la categoría', '/categorias', '← Volver')}"/>
+
+
+        <div class="form-container">
+
+            <div th:if="${error}" class="error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/categorias/actualizar/{id}(id=${categoria.id})}"
+                  method="post">
+
+                <div class="form-grid">
+
+                    <div class="input-group">
+                        <label>Nombre *</label>
+                        <input type="text" name="nombre"
+                               th:value="${categoria.nombre}" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Tipo de control *</label>
+                        <select name="tipoControl" required>
+                            <option th:each="tipo : ${tiposControl}"
+                                    th:value="${tipo.name()}"
+                                    th:text="${tipo.name()}"
+                                    th:selected="${tipo == categoria.tipoControl}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Descripción</label>
+                        <textarea name="descripcion"
+                                  th:text="${categoria.descripcion}"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <a href="/categorias" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Actualizar Categoría</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

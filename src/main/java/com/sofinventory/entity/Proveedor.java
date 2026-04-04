@@ -61,7 +61,7 @@ public class Proveedor {
      * Define si el proveedor es 'nacional' o 'extranjero'.
      * Útil para cálculos de impuestos y logística de importación.
      */
-    @Column(name = "tipo_provider", nullable = false, length = 20)
+    @Column(name = "tipo_proveedor", nullable = false, length = 20)
     private String tipoProveedor = "nacional";
 
     /**

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Nueva Categoría')}"></head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar de navegación, cargado desde fragmento -->
+  <th:block th:replace="~{fragments/layout :: sidebar('categorias')}"/>
+
+
+  <!-- Contenido principal -->
+  <main class="main">
+    <th:block th:replace="~{fragments/layout :: headerPagina('Nueva Categoría', 'Completa los datos de la nueva categoría', '/categorias', '← Volver')}"/>
+
+    <div class="form-container">
+
+      <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+      </div>
+
+      <form action="/categorias/guardar" method="post">
+
+        <div class="form-grid">
+
+          <div class="input-group">
+            <label>Nombre *</label>
+            <input type="text" name="nombre"
+                   placeholder="Ej: Herramientas eléctricas" required/>
+          </div>
+
+          <div class="input-group">
+            <label>Tipo de control *</label>
+            <select name="tipoControl" required>
+              <option th:each="tipo : ${tiposControl}"
+                      th:value="${tipo.name()}"
+                      th:text="${tipo.name()}">
+              </option>
+            </select>
+          </div>
+
+          <div class="input-group full-width">
+            <label>Descripción</label>
+            <textarea name="descripcion"
+                      placeholder="Descripción opcional de la categoría..."></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <a href="/categorias" class="btn-cancelar">Cancelar</a>
+          <button type="submit" class="btn-guardar">Guardar Categoría</button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

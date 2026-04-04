@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Categorías')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('categorias')}"/>
+    <!-- Contenido principal -->
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Gestión de Categorías', 'Administra las categorías de productos', '/categorias/nueva', '+ Nueva Categoría')}"/>
+
+        <!-- Categorías activas -->
+        <h3 class="section-title">Categorías Activas</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Tipo de control</th>
+                    <th>Descripción</th>
+                    <th>Fecha registro</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="categoria : ${activas}">
+                    <td data-label="#" th:text="${categoria.id}"></td>
+
+                    <td data-label="Nombre" th:text="${categoria.nombre}"></td>
+
+                    <td data-label="Tipo de control">
+            <span class="badge-categoria"
+                  th:classappend="' ' + ${#strings.toLowerCase(categoria.tipoControl)}"
+                  th:text="${categoria.tipoControl}">
+            </span>
+                    </td>
+
+                    <td data-label="Descripción" th:text="${categoria.descripcion}"></td>
+
+                    <td data-label="Fecha"
+                        th:text="${#temporals.format(categoria.fechaCreacion, 'dd/MM/yyyy')}">
+                    </td>
+
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/categorias/editar/{id}(id=${categoria.id})}"
+                           class="btn-editar">Editar</a>
+
+                        <a th:href="@{/categorias/eliminar/{id}(id=${categoria.id})}"
+                           class="btn-desactivar"
+                           onclick="return confirm('¿Eliminar esta categoría?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(activas)}">
+                    <td colspan="6" style="text-align:center; color:#999; padding:24px;">
+                        No hay categorías activas
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Categorías eliminadas -->
+        <h3 class="section-title" style="margin-top: 32px;">Categorías Eliminadas</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Tipo de control</th>
+                    <th>Descripción</th>
+                    <th>Fecha eliminación</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="categoria : ${eliminadas}">
+                    <td th:text="${categoria.id}"></td>
+                    <td th:text="${categoria.nombre}"></td>
+                    <td>
+                        <span class="badge-rol" th:text="${categoria.tipoControl}"></span>
+                    </td>
+                    <td th:text="${categoria.descripcion}"></td>
+                    <td th:text="${#temporals.format(categoria.fechaEliminacion, 'dd/MM/yyyy')}"></td>
+                    <td class="acciones">
+                        <a th:href="@{/categorias/restaurar/{id}(id=${categoria.id})}"
+                           class="btn-reactivar"
+                           onclick="return confirm('¿Restaurar esta categoría?')">
+                            Restaurar
+                        </a>
+                        <a th:href="@{/categorias/eliminar-permanente/{id}(id=${categoria.id})}"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Eliminar permanentemente? Esta acción no se puede deshacer.')">
+                            Eliminar permanente
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(eliminadas)}">
+                    <td colspan="6" style="text-align:center; color:#999; padding:24px;">
+                        No hay categorías eliminadas
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
