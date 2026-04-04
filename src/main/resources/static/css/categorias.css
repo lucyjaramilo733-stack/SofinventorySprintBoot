@@ -1,0 +1,170 @@
+/* =============== BADGE TIPO CATEGORIA =============== */
+.badge-categoria {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* Colores por tipo */
+.badge-categoria.inventario {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge-categoria.servicio {
+    background-color: #ede9fe;
+    color: #5b21b6;
+}
+
+.badge-categoria.consumible {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+/* =============== FORMULARIOS =============== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.input-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* =============== TABLA RESPONSIVE =============== */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.tabla th {
+    text-align: left;
+    font-size: 13px;
+    color: #666;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.tabla td {
+    padding: 12px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/* =============== RESPONSIVE =============== */
+
+/* 📱 CELULARES */
+@media (max-width: 768px) {
+
+    /* Sidebar oculto */
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100%;
+        z-index: 1000;
+        transition: 0.3s;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    /* Contenido ocupa todo */
+    .main {
+        padding: 16px;
+    }
+
+    /* Header en columna */
+    .header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    /* Botones */
+    .btn-nuevo,
+    .btn-volver {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Formularios en 1 columna */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Acciones en columna */
+    .acciones {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    /* Tabla tipo tarjeta */
+    .tabla thead {
+        display: none;
+    }
+
+    .tabla tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 10px;
+        background: #fff;
+    }
+
+    .tabla td {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        padding: 6px 0;
+    }
+
+    .tabla td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
+    }
+}
+
+/* 📲 TABLETS */
+@media (max-width: 1024px) {
+
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .main {
+        padding: 20px;
+    }
+}
