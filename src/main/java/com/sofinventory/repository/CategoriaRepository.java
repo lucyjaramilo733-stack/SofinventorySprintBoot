@@ -18,4 +18,5 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     Boolean existsByNombre(String nombre);
     // Verifica si existe otra categoría con el mismo nombre (excluyendo un id)
     Boolean existsByNombreAndIdNot(String nombre, Long id);
+    long countByFechaEliminacionIsNull();
 }

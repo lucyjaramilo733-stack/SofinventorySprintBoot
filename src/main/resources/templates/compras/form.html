@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Nueva Compra')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('compras')}"/>
+
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Nueva Compra',
+            'Registra una compra a proveedor',
+            '/compras',
+            '← Volver')}"/>
+
+        <div class="form-container">
+
+            <div th:if="${error}" class="error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form action="/compras/guardar" method="post" id="formCompra">
+
+                <!-- Sección: Datos de la compra -->
+                <div class="form-grid">
+                    <p class="form-section-title">Datos de la compra</p>
+
+                    <div class="input-group">
+                        <label>Número de factura *</label>
+                        <input type="text" name="numeroFactura"
+                               placeholder="Ej: FAC-2024-001" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Fecha de compra *</label>
+                        <input type="date" name="fechaCompra"
+                               th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                               required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Proveedor *</label>
+                        <select name="proveedorId" required>
+                            <option value="">Selecciona...</option>
+                            <option th:each="p : ${proveedores}"
+                                    th:value="${p.id}"
+                                    th:text="${p.razonSocial}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Tipo de compra *</label>
+                        <select name="tipoCompra" required>
+                            <option value="contado">Contado</option>
+                            <option value="credito">Crédito</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sección: Productos -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Productos</p>
+                </div>
+
+                <div class="filas-productos" id="filasProductos">
+                    <!-- Fila inicial -->
+                    <div class="fila-producto">
+                        <div class="col-group">
+                            <label>Producto *</label>
+                            <select name="productosIds" required>
+                                <option value="">Selecciona...</option>
+                                <option th:each="p : ${productos}"
+                                        th:value="${p.id}"
+                                        th:text="${p.sku + ' - ' + p.nombre}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-group">
+                            <label>Almacén *</label>
+                            <select name="almacenesIds" required>
+                                <option value="">Selecciona...</option>
+                                <option th:each="a : ${almacenes}"
+                                        th:value="${a.id}"
+                                        th:text="${a.nombre}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-group">
+                            <label>Cantidad *</label>
+                            <input type="number" name="cantidades"
+                                   min="1" placeholder="0" required/>
+                        </div>
+                        <div class="col-group">
+                            <label>Costo unitario *</label>
+                            <input type="number" name="costosUnitarios"
+                                   min="0" step="0.01" placeholder="0.00" required/>
+                        </div>
+                        <div class="col-group">
+                            <label>IVA % *</label>
+                            <select name="ivasPorcentaje" required>
+                                <option value="0">0%</option>
+                                <option value="5">5%</option>
+                                <option value="19" selected>19%</option>
+                            </select>
+                        </div>
+                        <div class="col-group">
+                            <label>Lote (opcional)</label>
+                            <input type="text" name="codigosLote"
+                                   placeholder="Ej: LOTE-001"/>
+                        </div>
+                        <button type="button" class="btn-quitar-fila"
+                                onclick="quitarFila(this)">✕</button>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-agregar-fila"
+                        onclick="agregarFila()">+ Agregar producto</button>
+
+                <div class="form-actions">
+                    <a href="/compras" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Registrar Compra</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/compras.js}"></script>
+</body>
+</html>

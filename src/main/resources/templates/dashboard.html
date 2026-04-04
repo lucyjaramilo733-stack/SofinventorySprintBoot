@@ -41,8 +41,22 @@
             </div>
             <div class="card">
                 <p class="card-title">Productos</p>
-                <h2 class="card-number">0</h2>
+                <h2 class="card-number" th:text="${productoActivos}">0</h2>
                 <p class="card-desc">Productos en inventario</p>
+            </div>
+
+            <!-- ✅ NUEVA TARJETA: Compras registradas -->
+            <div class="card">
+                <p class="card-title">Compras</p>
+                <h2 class="card-number" th:text="${totalCompras}">0</h2>
+                <p class="card-desc">Compras registradas</p>
+            </div>
+
+            <!-- ✅ NUEVA TARJETA: Ventas (para cuando la tengas) -->
+            <div class="card">
+                <p class="card-title">Ventas</p>
+                <h2 class="card-number" th:text="${totalVentas}">0</h2>
+                <p class="card-desc">Ventas realizadas</p>
             </div>
         </div>
     </main>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Stock')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('stock')}"/>
+
+    <main class="main">
+
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Inventario / Stock',
+            'Consulta y ajuste de existencias por almacén',
+            '',
+            '')}"/>
+
+        <!-- Mensaje flash -->
+        <div th:if="${mensaje}"
+             th:class="${tipoMensaje == 'exito'} ? 'alert-success' : 'alert-error'"
+             style="margin-bottom: 16px;">
+            <p th:text="${mensaje}"></p>
+        </div>
+
+        <!-- Tarjetas de resumen -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr);
+                    gap: 16px; margin-bottom: 24px;">
+
+            <a th:href="@{/stock(alerta='agotado')}"
+               class="card"
+               th:classappend="${filtroAlerta == 'agotado'} ? ' card-alerta-activa'"
+               style="text-decoration: none; cursor: pointer;">
+                <p class="card-title">🔴 Agotados</p>
+                <p class="card-number" th:text="${totalAgotados}">0</p>
+                <p class="card-desc">Sin existencias</p>
+            </a>
+
+            <a th:href="@{/stock(alerta='bajo')}"
+               class="card"
+               th:classappend="${filtroAlerta == 'bajo'} ? ' card-alerta-activa'"
+               style="text-decoration: none; cursor: pointer;">
+                <p class="card-title">🟡 Stock bajo</p>
+                <p class="card-number" th:text="${totalBajo}">0</p>
+                <p class="card-desc">En o por debajo del mínimo</p>
+            </a>
+
+            <a th:href="@{/stock}"
+               class="card"
+               th:classappend="${filtroAlerta == null} ? ' card-alerta-activa'"
+               style="text-decoration: none; cursor: pointer;">
+                <p class="card-title">📦 Todo el stock</p>
+                <p class="card-desc">Ver todos los registros</p>
+            </a>
+
+        </div>
+
+        <!-- Filtros -->
+        <div class="form-container" style="margin-bottom: 24px;">
+            <form method="get" action="/stock"
+                  style="display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;">
+
+                <div class="form-group" style="min-width: 220px;">
+                    <label>Filtrar por almacén</label>
+                    <select name="almacenId" onchange="this.form.submit()">
+                        <option value="">— Todos los almacenes —</option>
+                        <option
+                                th:each="a : ${almacenes}"
+                                th:value="${a.id}"
+                                th:text="${a.nombre}"
+                                th:selected="${filtroAlmacenId == a.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="min-width: 220px;">
+                    <label>Filtrar por producto</label>
+                    <select name="productoId" onchange="this.form.submit()">
+                        <option value="">— Todos los productos —</option>
+                        <option
+                                th:each="p : ${productos}"
+                                th:value="${p.id}"
+                                th:text="${p.nombre}"
+                                th:selected="${filtroProductoId == p.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <a href="/stock" class="btn-cancelar">✕ Limpiar filtros</a>
+
+            </form>
+        </div>
+
+        <!-- Tabla -->
+        <h3 class="section-title">
+            Existencias registradas
+            <span th:if="${filtroAlerta == 'agotado'}" style="color: #991b1b;">
+                — Mostrando agotados
+            </span>
+            <span th:if="${filtroAlerta == 'bajo'}" style="color: #92400e;">
+                — Mostrando stock bajo
+            </span>
+            <span th:if="${filtroAlerta == 'excedido'}" style="color: #1a56db;">
+                — Mostrando stock excedido
+            </span>
+        </h3>
+
+        <!-- Sin resultados -->
+        <div th:if="${#lists.isEmpty(stocks)}"
+             style="padding: 32px; text-align: center; color: #999;">
+            <p>No hay registros con los filtros aplicados.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(stocks)}" class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Producto</th>
+                    <th>SKU</th>
+                    <th>Almacén</th>
+                    <th>Stock mín.</th>
+                    <th>Stock máx.</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Última actualización</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s, iter : ${stocks}"
+                    th:style="${s.agotado}    ? 'background-color:#fff1f2'
+                                : (${s.stockBajo} ? 'background-color:#fffbeb' : '')">
+
+                    <td data-label="#"
+                        th:text="${iter.count}"></td>
+
+                    <td data-label="Producto">
+                            <span th:text="${s.producto.nombre}"
+                                  style="font-weight: 600;"></span>
+                        <br th:if="${s.producto.marca}">
+                        <small th:if="${s.producto.marca}"
+                               th:text="${s.producto.marca}"
+                               style="color:#999;"></small>
+                    </td>
+
+                    <td data-label="SKU">
+                        <code style="background:#f3f4f6; padding:2px 6px;
+                                         border-radius:4px; font-size:12px;"
+                              th:text="${s.producto.sku}"></code>
+                    </td>
+
+                    <td data-label="Almacén"
+                        th:text="${s.almacen.nombre}"></td>
+
+                    <td data-label="Stock mín."
+                        th:text="${s.stockMinimo}"></td>
+
+                    <td data-label="Stock máx.">
+                        <span th:text="${s.stockMaximo != null} ? ${s.stockMaximo} : '—'"></span>
+                    </td>
+
+                    <td data-label="Cantidad"
+                        th:text="${s.cantidad}"></td>
+
+                    <td data-label="Estado">
+                            <span th:if="${s.agotado}"
+                                  class="badge-estado inactivo">Agotado</span>
+                        <span th:if="${s.stockBajo and !s.agotado}"
+                              class="badge-estado badge-bajo">Stock bajo</span>
+                        <span th:if="${s.stockExcedido}"
+                              class="badge-estado badge-excedido">Excedido</span>
+                        <span th:if="${!s.agotado and !s.stockBajo and !s.stockExcedido}"
+                              class="badge-estado activo">Normal</span>
+                    </td>
+
+                    <td data-label="Última actualización"
+                        th:text="${#temporals.format(s.ultimaActualizacion,
+                                      'dd/MM/yyyy HH:mm')}"></td>
+
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/stock/{id}/ajuste(id=${s.id})}"
+                           class="btn-editar">⚖️ Ajustar</a>
+                        <a th:href="@{/stock/{id}/umbrales(id=${s.id})}"
+                           class="btn-desactivar">🎯 Umbrales</a>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

@@ -23,4 +23,5 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     // Verificar si existe un producto con un SKU específico excluyendo un id
     Boolean existsBySkuAndIdNot(String sku, Long id);
+    long countByFechaEliminacionIsNull();
 }

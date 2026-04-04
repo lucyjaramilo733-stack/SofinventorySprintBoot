@@ -27,6 +27,10 @@ public class CategoriaService {
         return categoriaRepository.findByFechaEliminacionIsNotNull();
     }
 
+    // ── Contadores para el dashboard ─────────────────────────────────────────
+    public long contarActivas() {
+        return categoriaRepository.countByFechaEliminacionIsNull();
+    }
     // Obtener por id
     public Categoria obtenerCategoria(Long id) {
         return categoriaRepository.findById(id)

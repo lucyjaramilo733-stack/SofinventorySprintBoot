@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Ajuste de Stock')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('stock')}"/>
+
+    <main class="main">
+
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Ajuste de Stock',
+            'Registra una entrada o salida manual de existencias',
+            '/stock',
+            '← Volver al inventario')}"/>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr;
+                    gap: 24px; align-items: start;">
+
+            <!-- Tarjeta información actual -->
+            <div class="form-container">
+                <h3 class="section-title">Información actual</h3>
+
+                <div class="form-group">
+                    <label>Producto</label>
+                    <input type="text"
+                           th:value="${stock.producto.nombre}"
+                           disabled>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>SKU</label>
+                        <input type="text"
+                               th:value="${stock.producto.sku}"
+                               disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Almacén</label>
+                        <input type="text"
+                               th:value="${stock.almacen.nombre}"
+                               disabled>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Stock mínimo</label>
+                        <input type="text"
+                               th:value="${stock.stockMinimo}"
+                               disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock máximo</label>
+                        <input type="text"
+                               th:value="${stock.stockMaximo != null} ? ${stock.stockMaximo} : 'Sin límite'"
+                               disabled>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cantidad actual</label>
+                    <input type="text"
+                           th:value="${stock.cantidad + ' unidades'}"
+                           disabled
+                           th:style="${stock.agotado}    ? 'color:#991b1b; font-weight:700'
+                                    : (${stock.stockBajo} ? 'color:#92400e; font-weight:700'
+                                                          : 'color:#065f46; font-weight:700')">
+                </div>
+
+                <div class="form-group">
+                    <label>Estado actual</label>
+                    <div style="margin-top: 4px;">
+                        <span th:if="${stock.agotado}"
+                              class="badge-estado inactivo">Agotado</span>
+                        <span th:if="${stock.stockBajo and !stock.agotado}"
+                              class="badge-estado badge-bajo">Stock bajo</span>
+                        <span th:if="${stock.stockExcedido}"
+                              class="badge-estado badge-excedido">Excedido</span>
+                        <span th:if="${!stock.agotado and !stock.stockBajo and !stock.stockExcedido}"
+                              class="badge-estado activo">Normal</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Última actualización</label>
+                    <input type="text"
+                           th:value="${#temporals.format(stock.ultimaActualizacion,
+                                     'dd/MM/yyyy HH:mm')}"
+                           disabled>
+                </div>
+            </div>
+
+            <!-- Formulario ajuste -->
+            <div class="form-container">
+                <h3 class="section-title">Aplicar ajuste</h3>
+
+                <form th:action="@{/stock/{id}/ajuste(id=${stock.id})}"
+                      method="post"
+                      onsubmit="return validarFormulario()">
+
+                    <!-- Tipo de ajuste -->
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label>Tipo de ajuste <span class="required">*</span></label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr;
+                                    gap: 10px; margin-top: 6px;">
+
+                            <label id="label-entrada"
+                                   style="display:flex; align-items:center; gap:8px;
+                                          padding:12px; border:2px solid #1a1a2e;
+                                          border-radius:8px; cursor:pointer;
+                                          background-color:#f0f2f5;">
+                                <input type="radio"
+                                       name="tipoAjuste"
+                                       value="entrada"
+                                       checked
+                                       onchange="actualizarVista()">
+                                <span>
+                                    ➕ Entrada
+                                    <small style="display:block; font-weight:400;
+                                                  color:#888; font-size:11px;">
+                                        Suma unidades
+                                    </small>
+                                </span>
+                            </label>
+
+                            <label id="label-salida"
+                                   style="display:flex; align-items:center; gap:8px;
+                                          padding:12px; border:2px solid #ddd;
+                                          border-radius:8px; cursor:pointer;
+                                          background-color:#fff;">
+                                <input type="radio"
+                                       name="tipoAjuste"
+                                       value="salida"
+                                       onchange="actualizarVista()">
+                                <span>
+                                    ➖ Salida
+                                    <small style="display:block; font-weight:400;
+                                                  color:#888; font-size:11px;">
+                                        Resta unidades
+                                    </small>
+                                </span>
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <!-- Cantidad -->
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label>Cantidad a ajustar <span class="required">*</span></label>
+                        <input type="number"
+                               id="inputCantidad"
+                               name="cantidad"
+                               min="1"
+                               placeholder="Ej: 10"
+                               required
+                               oninput="calcularResultado()">
+                        <small>
+                            Disponible: <strong th:text="${stock.cantidad}"></strong> uds. —
+                            Mín: <strong th:text="${stock.stockMinimo}"></strong> —
+                            Máx: <strong th:text="${stock.stockMaximo != null}
+                                               ? ${stock.stockMaximo} : 'Sin límite'"></strong>
+                        </small>
+                    </div>
+
+                    <!-- Preview resultado -->
+                    <div style="display:flex; align-items:center; gap:12px;
+                                padding:12px 14px; background:#f8f9fa;
+                                border-radius:8px; border:1px dashed #ddd;
+                                margin-bottom: 16px;">
+                        <span style="font-size:13px; font-weight:600; color:#666;">
+                            Stock resultante:
+                        </span>
+                        <span id="preview-valor"
+                              style="font-size:16px; font-weight:700; color:#1a1a2e;">
+                            —
+                        </span>
+                    </div>
+
+                    <!-- Motivo -->
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label>Motivo <small style="font-weight:400;">(opcional)</small></label>
+                        <textarea name="motivo"
+                                  rows="3"
+                                  placeholder="Ej: Corrección por conteo físico, merma, devolución...">
+                        </textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="/stock" class="btn-cancelar">Cancelar</a>
+                        <button type="submit" class="btn-guardar">
+                            ⚖️ Aplicar ajuste
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+<script th:inline="javascript">
+    const stockActual  = parseInt('[[${stock.cantidad}]]');
+    const stockMinimo  = parseInt('[[${stock.stockMinimo}]]');
+    const stockMaximo  = '[[${stock.stockMaximo}]]' === '' ? null
+        : parseInt('[[${stock.stockMaximo}]]');
+
+    function actualizarVista() {
+        calcularResultado();
+        const tipo = document.querySelector('input[name="tipoAjuste"]:checked')?.value;
+        const labelEntrada = document.getElementById('label-entrada');
+        const labelSalida  = document.getElementById('label-salida');
+
+        if (tipo === 'entrada') {
+            labelEntrada.style.borderColor     = '#1a1a2e';
+            labelEntrada.style.backgroundColor = '#f0f2f5';
+            labelSalida.style.borderColor      = '#ddd';
+            labelSalida.style.backgroundColor  = '#fff';
+        } else {
+            labelSalida.style.borderColor      = '#1a1a2e';
+            labelSalida.style.backgroundColor  = '#f0f2f5';
+            labelEntrada.style.borderColor     = '#ddd';
+            labelEntrada.style.backgroundColor = '#fff';
+        }
+    }
+
+    function calcularResultado() {
+        const unidades = parseInt(document.getElementById('inputCantidad').value) || 0;
+        const tipo     = document.querySelector('input[name="tipoAjuste"]:checked')?.value;
+        const preview  = document.getElementById('preview-valor');
+
+        if (unidades <= 0) {
+            preview.textContent = '—';
+            preview.style.color = '#1a1a2e';
+            return;
+        }
+
+        const resultado = tipo === 'entrada'
+            ? stockActual + unidades
+            : stockActual - unidades;
+
+        preview.textContent = resultado + ' unidades';
+
+        if (resultado < 0) {
+            preview.style.color = '#991b1b';
+        } else if (resultado === 0) {
+            preview.style.color = '#991b1b';
+        } else if (resultado <= stockMinimo) {
+            preview.style.color = '#92400e';
+        } else if (stockMaximo !== null && resultado > stockMaximo) {
+            preview.style.color = '#1a56db';
+        } else {
+            preview.style.color = '#065f46';
+        }
+    }
+
+    function validarFormulario() {
+        const unidades = parseInt(document.getElementById('inputCantidad').value);
+        const tipo     = document.querySelector('input[name="tipoAjuste"]:checked')?.value;
+
+        if (!unidades || unidades <= 0) {
+            alert('La cantidad debe ser mayor a 0.');
+            return false;
+        }
+        if (tipo === 'salida' && unidades > stockActual) {
+            alert('No puedes restar más unidades de las disponibles (' + stockActual + ').');
+            return false;
+        }
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', actualizarVista);
+</script>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

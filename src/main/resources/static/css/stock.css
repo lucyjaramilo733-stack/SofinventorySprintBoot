@@ -1,0 +1,52 @@
+/* =============== BADGE STOCK BAJO =============== */
+.badge-bajo {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* =============== BADGE STOCK EXCEDIDO =============== */
+.badge-excedido {
+    background-color: #e8f0fe;
+    color: #1a56db;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* =============== ALERTA ÉXITO =============== */
+.alert-success {
+    background-color: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    color: #065f46;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+/* =============== CARD ALERTA ACTIVA =============== */
+.card-alerta-activa {
+    border: 2px solid #1a1a2e;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* =============== RESPONSIVE GRIDS =============== */
+@media (max-width: 768px) {
+
+    /* Grid de tarjetas de resumen */
+    div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Grid de formularios lado a lado */
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
