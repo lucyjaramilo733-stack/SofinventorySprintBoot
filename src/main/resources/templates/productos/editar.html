@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Editar Producto')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación -->
+    <th:block th:replace="~{fragments/layout :: sidebar('productos')}"/>
+
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Editar Producto',
+            'Modifica los datos del producto',
+            '/productos',
+            '← Volver')}"/>
+
+        <div class="form-container">
+
+            <div th:if="${error}" class="error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form th:action="@{/productos/actualizar/{id}(id=${producto.id})}"
+                  method="post">
+
+                <!-- Sección: Identificación -->
+                <div class="form-grid">
+                    <p class="form-section-title">Identificación</p>
+
+                    <div class="input-group">
+                        <label>SKU *</label>
+                        <input type="text" name="sku"
+                               th:value="${producto.sku}"
+                               maxlength="60" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nombre del producto *</label>
+                        <input type="text" name="nombre"
+                               th:value="${producto.nombre}"
+                               maxlength="200" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Marca</label>
+                        <input type="text" name="marca"
+                               th:value="${producto.marca}"
+                               maxlength="100"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Referencia</label>
+                        <input type="text" name="referencia"
+                               th:value="${producto.referencia}"
+                               maxlength="100"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Categoría *</label>
+                        <select name="categoriaId" required>
+                            <option value="">Selecciona...</option>
+                            <option th:each="c : ${categorias}"
+                                    th:value="${c.id}"
+                                    th:text="${c.nombre}"
+                                    th:selected="${c.id == producto.categoria.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Unidad de medida *</label>
+                        <select name="unidadMedida" required>
+                            <option value="unidad"  th:selected="${producto.unidadMedida == 'unidad'}">Unidad</option>
+                            <option value="metro"   th:selected="${producto.unidadMedida == 'metro'}">Metro</option>
+                            <option value="kilo"    th:selected="${producto.unidadMedida == 'kilo'}">Kilo</option>
+                            <option value="litro"   th:selected="${producto.unidadMedida == 'litro'}">Litro</option>
+                            <option value="caja"    th:selected="${producto.unidadMedida == 'caja'}">Caja</option>
+                            <option value="bulto"   th:selected="${producto.unidadMedida == 'bulto'}">Bulto</option>
+                            <option value="rollo"   th:selected="${producto.unidadMedida == 'rollo'}">Rollo</option>
+                            <option value="par"     th:selected="${producto.unidadMedida == 'par'}">Par</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sección: Información adicional -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Información adicional</p>
+
+                    <div class="input-group full-width">
+                        <label>Descripción</label>
+                        <textarea name="descripcion"
+                                  th:text="${producto.descripcion}"></textarea>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Observaciones</label>
+                        <textarea name="observaciones"
+                                  th:text="${producto.observaciones}"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/productos" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Actualizar Producto</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

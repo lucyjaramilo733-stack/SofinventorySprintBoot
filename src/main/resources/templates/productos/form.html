@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Nuevo Producto')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación -->
+    <th:block th:replace="~{fragments/layout :: sidebar('productos')}"/>
+
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Nuevo Producto',
+            'Completa los datos del nuevo producto',
+            '/productos',
+            '← Volver')}"/>
+
+        <div class="form-container">
+
+            <div th:if="${error}" class="error">
+                <p th:text="${error}"></p>
+            </div>
+
+            <form action="/productos/guardar" method="post">
+
+                <!-- Sección: Identificación -->
+                <div class="form-grid">
+                    <p class="form-section-title">Identificación</p>
+
+                    <div class="input-group">
+                        <label>SKU *</label>
+                        <input type="text" name="sku"
+                               placeholder="Ej: TORN-HEX-M8"
+                               maxlength="60" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nombre del producto *</label>
+                        <input type="text" name="nombre"
+                               placeholder="Ej: Tornillo hexagonal M8"
+                               maxlength="200" required/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Marca</label>
+                        <input type="text" name="marca"
+                               placeholder="Ej: Hilti"
+                               maxlength="100"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Referencia</label>
+                        <input type="text" name="referencia"
+                               placeholder="Ej: REF-2024-001"
+                               maxlength="100"/>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Categoría *</label>
+                        <select name="categoriaId" required>
+                            <option value="">Selecciona...</option>
+                            <option th:each="c : ${categorias}"
+                                    th:value="${c.id}"
+                                    th:text="${c.nombre}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Unidad de medida *</label>
+                        <select name="unidadMedida" required>
+                            <option value="unidad">Unidad</option>
+                            <option value="metro">Metro</option>
+                            <option value="kilo">Kilo</option>
+                            <option value="litro">Litro</option>
+                            <option value="caja">Caja</option>
+                            <option value="bulto">Bulto</option>
+                            <option value="rollo">Rollo</option>
+                            <option value="par">Par</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!-- Sección: Observaciones -->
+                <div class="form-grid" style="margin-top: 8px;">
+                    <p class="form-section-title">Información adicional</p>
+
+                    <div class="input-group full-width">
+                        <label>Descripción</label>
+                        <textarea name="descripcion"
+                                  placeholder="Describe el producto..."></textarea>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Observaciones</label>
+                        <textarea name="observaciones"
+                                  placeholder="Notas internas sobre el producto..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/productos" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar Producto</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

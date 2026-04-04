@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Productos')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación -->
+    <th:block th:replace="~{fragments/layout :: sidebar('productos')}"/>
+
+    <main class="main">
+
+        <th:block th:replace="~{fragments/layout :: headerPagina(
+            'Gestión de Productos',
+            'Administra el catálogo de productos',
+            '/productos/nuevo',
+            '+ Nuevo Producto')}"/>
+
+        <!-- Productos activos -->
+        <h3 class="section-title">Productos Activos</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>SKU</th>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Categoría</th>
+                    <th>Unidad</th>
+                    <th>Registrado por</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${activos}">
+                    <td data-label="#" th:text="${p.id}"></td>
+                    <td data-label="SKU">
+                        <span class="sku-badge" th:text="${p.sku}"></span>
+                    </td>
+                    <td data-label="Nombre" th:text="${p.nombre}"></td>
+                    <td data-label="Marca" th:text="${p.marca != null ? p.marca : '-'}"></td>
+                    <td data-label="Categoría" th:text="${p.categoria.nombre}"></td>
+                    <td data-label="Unidad" th:text="${p.unidadMedida}"></td>
+                    <td data-label="Registrado por"
+                        th:text="${p.registradoPor.nombreCompleto}">
+                    </td>
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/productos/editar/{id}(id=${p.id})}"
+                           class="btn-editar">Editar</a>
+                        <a th:href="@{/productos/eliminar/{id}(id=${p.id})}"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Eliminar este producto?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Papelera -->
+        <h3 class="section-title" style="margin-top: 32px;">🗑️ Papelera de Productos</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>SKU</th>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Categoría</th>
+                    <th>Unidad</th>
+                    <th>Registrado Por</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${eliminados}">
+                    <td th:text="${p.id}"></td>
+                    <td><span class="sku-badge" th:text="${p.sku}"></span></td>
+                    <td th:text="${p.nombre}"></td>
+                    <td th:text="${p.marca != null ? p.marca : '-'}"></td>
+                    <td th:text="${p.categoria.nombre}"></td>
+                    <td data-label="Unidad" th:text="${p.unidadMedida}"></td>
+                    <td data-label="Registrado por"
+                        th:text="${p.registradoPor.nombreCompleto}">
+                    </td>
+                    <td class="acciones">
+                        <a th:href="@{/productos/restaurar/{id}(id=${p.id})}"
+                           class="btn-restaurar"
+                           onclick="return confirm('¿Restaurar este producto?')">
+                            Restaurar
+                        </a>
+                        <a th:href="@{/productos/eliminar-permanente/{id}(id=${p.id})}"
+                           class="btn-eliminar-permanente"
+                           onclick="return confirm('¿Eliminar permanentemente? Esta acción no se puede deshacer.')">
+                            Eliminar definitivo
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
+
+
