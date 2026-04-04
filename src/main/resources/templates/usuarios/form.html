@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nuevo Usuario')}"></head>
+<body>
+<div class="layout">
+    <th:block th:replace="~{fragments/layout :: sidebar('usuarios')}"/>
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Nuevo Usuario', 'Completa los datos del nuevo usuario', '/usuarios', '← Volver')}"/>
+
+        <div class="form-container">
+            <div th:if="${error}" class="error"><p th:text="${error}"></p></div>
+            <form action="/usuarios/guardar" method="post" id="formUsuario">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Nombre completo</label>
+                        <input type="text" name="nombreCompleto" placeholder="Nombre completo" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" name="username" placeholder="Nombre de usuario" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder="correo@ejemplo.com" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Contraseña</label>
+                        <input type="password" name="password" placeholder="Contraseña" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo de documento</label>
+                        <select name="tipoDocumentoId" required>
+                            <option value="">Selecciona...</option>
+                            <option th:each="tipo : ${tiposDocumento}"
+                                    th:value="${tipo.id}"
+                                    th:text="${tipo.codigo + ' - ' + tipo.nombre}"></option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Número de documento</label>
+                        <input type="text" name="numeroDocumento" placeholder="Número de documento" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Rol</label>
+                        <select name="rolId" required>
+                            <option value="">Selecciona...</option>
+                            <option th:each="rol : ${roles}"
+                                    th:value="${rol.id}"
+                                    th:text="${rol.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <a href="/usuarios" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/usuarios.js}"></script>
+</body>
+</html>

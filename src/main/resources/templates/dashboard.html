@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar (menú lateral) -->
+    <th:block th:replace="~{fragments/layout :: sidebar('dashboard')}"/>
+
+    <main class="main">
+        <!-- Header con bienvenida -->
+        <th:block th:replace="~{fragments/layout :: headerBienvenida}"/>
+        <!-- ==================== CARDS RESUMEN ==================== -->
+        <!-- Muestra métricas principales del sistema -->
+        <div class="cards">
+            <div class="card">
+                <p class="card-title">Usuarios activos</p>
+                <h2 class="card-number" th:text="${usuariosActivos}">0</h2>
+                <p class="card-desc">Usuarios activos en el sistema</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Usuarios inactivos</p>
+                <h2 class="card-number" th:text="${usuariosInactivos}">0</h2>
+                <p class="card-desc">Usuarios desactivados</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Proveedores</p>
+                <h2 class="card-number" th:text="${proveedoresActivos}">0</h2>
+                <p class="card-desc">Proveedores activos</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Categorías</p>
+                <h2 class="card-number" th:text="${categoriasActivas}">0</h2>
+                <p class="card-desc">Categorías activas</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Almacenes</p>
+                <h2 class="card-number" th:text="${almacenesActivos}">0</h2>
+                <p class="card-desc">Almacenes activos</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Productos</p>
+                <h2 class="card-number">0</h2>
+                <p class="card-desc">Productos en inventario</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

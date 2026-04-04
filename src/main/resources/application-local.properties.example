@@ -1,0 +1,6 @@
+# Copia este archivo como application-local.properties y llena tus datos
+spring.datasource.url=jdbc:postgresql://localhost:PUERTO/NOMBRE_BD
+spring.datasource.username=TU_USUARIO
+spring.datasource.password=TU_CONTRASEÑA
+
+jwt.secret=TU_CLAVE_SECRETA

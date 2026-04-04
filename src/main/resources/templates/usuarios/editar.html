@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Editar Usuario')}"></head>
+<body>
+<div class="layout">
+    <th:block th:replace="~{fragments/layout :: sidebar('usuarios')}"/>
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Editar Usuario', 'Modifica los datos del usuario', '/usuarios', '← Volver')}"/>
+
+        <div class="form-container">
+            <div th:if="${error}" class="error"><p th:text="${error}"></p></div>
+            <form th:action="@{/usuarios/actualizar/{id}(id=${usuario.id})}" method="post">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Nombre completo</label>
+                        <input type="text" name="nombreCompleto" th:value="${usuario.nombreCompleto}" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Username</label>
+                        <input type="text" name="username" th:value="${usuario.username}" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" name="email" th:value="${usuario.email}" required/>
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo de documento</label>
+                        <select name="tipoDocumentoId" required>
+                            <option th:each="tipo : ${tiposDocumento}"
+                                    th:value="${tipo.id}"
+                                    th:text="${tipo.codigo + ' - ' + tipo.nombre}"
+                                    th:selected="${tipo.id == usuario.tipoDocumento.id}"></option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Número de documento</label>
+                        <input type="text" th:value="${usuario.numeroDocumento}" disabled/>
+                    </div>
+                    <div class="input-group">
+                        <label>Rol</label>
+                        <select name="rolId" required>
+                            <option th:each="rol : ${roles}"
+                                    th:value="${rol.id}"
+                                    th:text="${rol.nombre}"
+                                    th:selected="${rol.id == usuario.rol.id}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <a href="/usuarios" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Actualizar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

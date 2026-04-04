@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    /* Fondo oscuro profundo con un toque de azul */
+    background: #020f27;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.card {
+    /* Efecto Espejo Oscuro */
+    background: rgba(13, 27, 42, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 212, 255, 0.2); /* Borde neón sutil */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 212, 255, 0.1);
+    animation: slideUp 0.6s ease-out;
+}
+
+.logo-wrapper {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.login-logo {
+    width: 100%;
+    border-radius: 10px;
+    /* Brillo exterior que combina con el neón de la imagen */
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: #a0c4ff; /* Azul claro */
+    font-size: 13px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.05);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    /* Degradado azul oscuro a neón */
+    background: linear-gradient(90deg, #1b263b, #00d4ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.error-msg {
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid #ff4d4d;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    color: #ff4d4d;
+    font-size: 13px;
+    text-align: center;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

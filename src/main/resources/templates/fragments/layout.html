@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- ==================== FRAGMENTO: HEAD ==================== -->
+<th:block th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SofInventory - <th:block th:text="${titulo}"/></title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/usuarios.css}">
+    <link rel="stylesheet" th:href="@{/css/proveedores.css}">
+    <link rel="stylesheet" th:href="@{/css/categorias.css}">
+    <link rel="stylesheet" th:href="@{/css/almacenes.css}">
+    <link rel="stylesheet" th:href="@{/css/productos.css}">
+    <link rel="stylesheet" th:href="@{/css/compras.css}">
+    <link rel="stylesheet" th:href="@{/css/stock.css}">
+</th:block>
+
+<!-- ==================== FRAGMENTO: SIDEBAR/NAV ==================== -->
+<!--
+    Uso: th:replace="~{fragments/layout :: sidebar('dashboard')}"
+    Valores válidos para 'seccion': dashboard, usuarios, proveedores, categorias, almacenes, inventario, reportes
+-->
+<aside th:fragment="sidebar(seccion)" class="sidebar">
+    <div class="sidebar-header">
+        <h2>SofInventory</h2>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="/dashboard"   th:classappend="${seccion == 'dashboard'}   ? ' active'" class="nav-item">📊 Dashboard</a>
+        <a href="/usuarios"    th:classappend="${seccion == 'usuarios'}    ? ' active'" class="nav-item">👥 Usuarios</a>
+        <a href="/proveedores" th:classappend="${seccion == 'proveedores'} ? ' active'" class="nav-item">🏭 Proveedores</a>
+        <a href="/categorias"  th:classappend="${seccion == 'categorias'}  ? ' active'" class="nav-item">🗂️ Categorías</a>
+        <a href="/productos"   th:classappend="${seccion == 'productos'}   ? ' active'" class="nav-item">📦 Productos</a>
+        <a href="/compras" th:classappend="${seccion == 'compras'} ? ' active'" class="nav-item">🛒 Compras</a>
+        <a href="/almacenes"   th:classappend="${seccion == 'almacenes'}   ? ' active'" class="nav-item">🏬 Almacenes</a>
+        <a href="/stock" th:classappend="${seccion == 'inventario'} ? ' active'" class="nav-item">📦 Inventario</a>
+        <a href="/reportes"    th:classappend="${seccion == 'reportes'}    ? ' active'" class="nav-item">📋 Reportes</a>
+    </nav>
+    <div class="sidebar-footer">
+        <a href="/logout" class="btn-logout">Cerrar sesión</a>
+    </div>
+</aside>
+
+<!-- ==================== FRAGMENTO: HEADER (bienvenida) ==================== -->
+<div th:fragment="headerBienvenida" class="header">
+    <div class="header-left">
+        <button class="btn-menu" onclick="toggleMenu()">☰</button>
+        <div>
+            <h1 class="welcome">
+                Bienvenido, <span th:text="${session.usuario}">Usuario</span> 👋
+            </h1>
+            <p class="fecha" id="fecha"></p>
+        </div>
+    </div>
+    <span class="badge" th:text="${session.rol}">ROL</span>
+</div>
+
+<!-- ==================== FRAGMENTO: HEADER (páginas internas) ==================== -->
+<!--
+    Uso: th:replace="~{fragments/layout :: headerPagina('Título', 'Subtítulo', '/ruta/nuevo', '+ Texto botón')}"
+    Si no hay botón, pasar null en los últimos dos parámetros
+-->
+<div th:fragment="headerPagina(titulo, subtitulo, rutaBoton, textoBoton)" class="header header-left">
+    <button class="btn-menu" onclick="toggleMenu()">☰</button>
+    <div>
+        <h1 class="welcome" th:text="${titulo}">Título</h1>
+        <p class="fecha" th:text="${subtitulo}"></p>
+    </div>
+    <a th:if="${rutaBoton != null}" th:href="${rutaBoton}" class="btn-nuevo" th:text="${textoBoton}"></a>
+</div>
+
+</body>
+</html>
