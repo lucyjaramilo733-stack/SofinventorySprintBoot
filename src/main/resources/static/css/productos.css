@@ -1,0 +1,136 @@
+/* =============== BADGE STOCK =============== */
+.badge-stock {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-stock.alto {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+.badge-stock.medio {
+    background-color: #fef9c3;
+    color: #92400e;
+}
+
+.badge-stock.bajo {
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+/* =============== SKU =============== */
+.sku-badge {
+    font-family: monospace;
+    font-size: 12px;
+    background-color: #f0f2f5;
+    color: #475569;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* =============== TEXTAREA =============== */
+.input-group textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+    background-color: #ffffff;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.input-group textarea:focus {
+    border-color: #1a1a2e;
+}
+
+/* =============== FULL WIDTH EN GRID =============== */
+.input-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* =============== SECCIÓN DE GRUPO =============== */
+.form-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f2f5;
+    grid-column: 1 / -1;
+}
+
+/* =============== BOTONES RESTAURAR / ELIMINAR DEFINITIVO =============== */
+.btn-restaurar {
+    background-color: #ecfdf5;
+    color: #065f46;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 4px;
+}
+
+.btn-restaurar:hover {
+    background-color: #d1fae5;
+}
+
+.btn-eliminar-permanente {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-eliminar-permanente:hover {
+    background-color: #fde68a;
+}
+
+/* =============== RESPONSIVE =============== */
+@media (max-width: 768px) {
+
+    .tabla thead {
+        display: none;
+    }
+
+    .tabla tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 12px;
+        background: #fff;
+    }
+
+    .tabla td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        padding: 6px 0;
+    }
+
+    .tabla td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
+    }
+
+    .acciones {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+}

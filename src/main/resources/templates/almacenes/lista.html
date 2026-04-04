@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Almacenes')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+
+    <th:block th:replace="~{fragments/layout :: sidebar('almacenes')}"/>
+    <!-- Contenido principal -->
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Gestión de Almacenes', 'Administra los almacenes y bodegas del negocio', '/almacenes/nuevo', '+ Nuevo Almacén')}"/>
+
+
+        <!-- Almacenes activos -->
+        <h3 class="section-title">Almacenes Activos</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Código</th>
+                    <th>Responsable</th>
+                    <th>Teléfono</th>
+                    <th>Capacidad</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="almacen : ${activos}">
+                    <td data-label="#" th:text="${almacen.id}"></td>
+                    <td data-label="Nombre" th:text="${almacen.nombre}"></td>
+                    <td data-label="Código" th:text="${almacen.codigo}"></td>
+                    <td data-label="Responsable" th:text="${almacen.responsable}"></td>
+                    <td data-label="Teléfono" th:text="${almacen.telefono}"></td>
+                    <td data-label="Capacidad" th:text="${almacen.capacidad}"></td>
+                    <td data-label="Dirección" th:text="${almacen.direccion}"></td>
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/almacenes/editar/{id}(id=${almacen.id})}"
+                           class="btn-editar">Editar</a>
+
+                        <a th:href="@{/almacenes/desactivar/{id}(id=${almacen.id})}"
+                           class="btn-desactivar"
+                           onclick="return confirm('¿Desactivar este almacén?')">
+                            Desactivar
+                        </a>
+
+                        <a th:href="@{/almacenes/eliminar/{id}(id=${almacen.id})}"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Eliminar permanentemente este almacén?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Almacenes inactivos -->
+        <h3 class="section-title" style="margin-top: 32px;">Almacenes Inactivos</h3>
+        <div class="table-container">
+            <table class="tabla">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Código</th>
+                    <th>Responsable</th>
+                    <th>Teléfono</th>
+                    <th>Capacidad</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="almacen : ${inactivos}">
+                    <td data-label="#" th:text="${almacen.id}"></td>
+                    <td data-label="Nombre" th:text="${almacen.nombre}"></td>
+                    <td data-label="Código" th:text="${almacen.codigo}"></td>
+                    <td data-label="Responsable" th:text="${almacen.responsable}"></td>
+                    <td data-label="Teléfono" th:text="${almacen.telefono}"></td>
+                    <td data-label="Capacidad" th:text="${almacen.capacidad}"></td>
+                    <td data-label="Dirección" th:text="${almacen.direccion}"></td>
+                    <td data-label="Acciones" class="acciones">
+                        <a th:href="@{/almacenes/reactivar/{id}(id=${almacen.id})}"
+                           class="btn-reactivar"
+                           onclick="return confirm('¿Reactivar este almacén?')">
+                            Reactivar
+                        </a>
+                        <a th:href="@{/almacenes/eliminar/{id}(id=${almacen.id})}"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Eliminar permanentemente este almacén?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>

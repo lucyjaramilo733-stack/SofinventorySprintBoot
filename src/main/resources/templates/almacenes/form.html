@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Head reutilizable -->
+<head th:replace="~{fragments/layout :: head('Nuevo Almacén')}"></head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar de navegación, cargado desde fragmento -->
+    <th:block th:replace="~{fragments/layout :: sidebar('almacenes')}"/>
+
+    <!-- Contenido principal -->
+    <main class="main">
+        <th:block th:replace="~{fragments/layout :: headerPagina('Nuevo Almacén', 'Completa los datos del nuevo almacén', '/almacenes', '← Volver')}"/>
+        <!-- resto del form sin cambios -->
+
+        <!-- Mensaje de error -->
+        <div th:if="${error}" class="alert-error">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div class="form-container">
+            <form action="/almacenes/guardar" method="post">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre <span class="required">*</span></label>
+                        <input type="text" id="nombre" name="nombre"
+                               placeholder="Nombre del almacén"
+                               maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="codigo">Código <span class="required">*</span></label>
+                        <input type="text" id="codigo" name="codigo"
+                               placeholder="Ej: ALM-001"
+                               maxlength="20" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="responsable">Responsable</label>
+                        <input type="text" id="responsable" name="responsable"
+                               placeholder="Nombre del responsable"
+                               maxlength="120">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono"
+                               placeholder="Teléfono de contacto"
+                               maxlength="20">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="capacidad">Capacidad</label>
+                        <input type="number" id="capacidad" name="capacidad"
+                               placeholder="Capacidad máxima"
+                               step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <!-- espacio reservado para futuros campos -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <textarea id="direccion" name="direccion"
+                              placeholder="Dirección del almacén"
+                              rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="notas">Notas</label>
+                    <textarea id="notas" name="notas"
+                              placeholder="Observaciones o notas adicionales"
+                              rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/almacenes" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar Almacén</button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
