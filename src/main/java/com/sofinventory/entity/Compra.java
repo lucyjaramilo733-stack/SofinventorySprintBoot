@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "compras")
 public class Compra {
-    // Identificador único
+    //Identificador único autoincremental
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -7,14 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+/**
+ * Entidad que representa cada ítem o producto individual dentro de una compra.
+ * Permite desglosar cantidades, costos unitarios e impuestos por producto.
+ * Implementa la lógica detallada del Caso de Uso: "Registrar ítems de compra".
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "detalle_compras")
 public class DetalleCompra {
-
+    // Identificador único autoincremental
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,6 +45,7 @@ public class DetalleCompra {
     private String codigoLote;
 
     // Relaciones
+    // Atributos específicos para control de inventario en ferreterías
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "compra_id", nullable = false)
     private Compra compra;
